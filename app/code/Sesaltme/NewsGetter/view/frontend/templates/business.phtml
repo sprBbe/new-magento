@@ -1,0 +1,45 @@
+<?php
+/** @var \Sesaltme\NewsGetter\Block\News $block */
+use Sesaltme\NewsGetter\Model\News;
+?>
+<?php
+  $result = $block->getArticles(News::BUSINESS);
+  $data = $result->rss['_value']['channel'];
+  $articles = $data['item'];
+?>
+
+<div class="container">
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+    <?php foreach($articles as $article): 
+      $desc = parseDescription($article['description']);
+    ?>
+    <div class="col">
+      <div class="card shadow rounded-2">
+        <div class="card-img-top">
+          <a href="<?= $desc['url'] ?>" target="blank">
+            <img alt="Picture" src="<?= $desc['img'] ?>">
+          </a>
+        </div>
+        <div class="card-body">
+          <a href="<?= $desc['url'] ?>" target="blank"><h2 class="fw-bold"><?= $article['title'] ?></h2></a>
+          <p class="card-text"><?= $desc['desc'] ?></p>
+          <div class="d-flex justify-content-end">
+            <small class="text-muted"><?= date('d/m/Y', strtotime($article['pubDate'])) ?></small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <?php endforeach; ?>
+  </div>
+</div>
+
+<pre>
+<?php
+  print_r($result);
+  function parseDescription(String $str) {
+    $regex = '/"(?<url>[^<]*)".*"(?<img>[^<]*)".*<\/br>(?<desc>.*)/m';
+    preg_match_all($regex, $str, $matches, PREG_SET_ORDER, 0);
+    return $matches[0];
+  }
+?>
+</pre>
