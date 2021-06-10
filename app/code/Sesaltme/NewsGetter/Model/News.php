@@ -5,10 +5,20 @@ class News extends \Magento\Framework\Model\AbstractModel
 {
     const REQUEST_TIMEOUT = 5000;
 
-    const BUSINESS = 'business';
+    const BUSINESS = 'BUSINESS';
+    const LATEST = 'LATEST';
+    const ENTERTAINMENT = 'ENTERTAINMENT';
+    const HOTTEST = 'HOTTEST';
+    const SPORT = 'SPORT';
+    const TRAVEL = 'TRAVEL';
 
     const NEWS_API = [
         self::BUSINESS => 'https://vnexpress.net/rss/kinh-doanh.rss',
+        self::LATEST => 'https://vnexpress.net/rss/tin-moi-nhat.rss',
+        self::ENTERTAINMENT => 'https://vnexpress.net/rss/giai-tri.rss',
+        self::HOTTEST => 'https://vnexpress.net/rss/tin-noi-bat.rss',
+        self::SPORT => 'https://vnexpress.net/rss/the-thao.rss',
+        self::TRAVEL => 'https://vnexpress.net/rss/du-lich.rss',
     ];
 
     private $response;

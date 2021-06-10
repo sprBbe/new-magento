@@ -5,14 +5,16 @@ use Sesaltme\NewsGetter\Model\News as NewsModel;
 
 class News extends \Magento\Framework\View\Element\Template
 {
-    protected $messageManager;
-
     private $newsFactory;
     private $model;
+    
+    private $resultData;
+    private $totalPage;
+
+    const PER_PAGE = 12;
     /**
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Sesaltme\NewsGetter\Model\NewsFactory $newsFactory,
-     * @param \Magento\Framework\Message\ManagerInterface $messageManager,
      * @param array $data
      */
     public function __construct(
@@ -24,10 +26,47 @@ class News extends \Magento\Framework\View\Element\Template
         $this->newsFactory = $newsFactory;
         $this->createModel();
     }
+    
+    public function get() {
+        return $this->resultData;
+    }
 
-    public function getArticles(String $type)
+    /**
+     * @param String $type
+     * @return $this
+     */
+    public function articles(String $type)
     {
-        return $this->model->getArticles($type);
+        $this->resultData = $this->model->getArticles($type);
+
+        return $this;
+    }
+
+    /**
+     * @param String $page
+     * @param int $perPage
+     * @return $this
+     */
+    public function paginate(int $page = 1, int $perPage = self::PER_PAGE) {
+        $items = &$this->resultData->rss['_value']['channel']['item'];
+        $this->totalPage = ceil(count($items) / $perPage);
+        
+        $items = array_slice($items, ($page - 1) * $perPage, $perPage);
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotalPages() {
+        return $this->totalPage;
+    }
+
+    public function parseDescription(String $str) {
+        $regex = '/"([^<]*)".*"(?<img>[^<]*)".*<\/br>(?<desc>.*)/m';
+        preg_match_all($regex, $str, $matches, PREG_SET_ORDER, 0);
+        return $matches[0] ?? ['img'=>'', 'desc'=>''];
     }
     
     private function createModel()

@@ -6,7 +6,7 @@ use Sesaltme\NewsGetter\Model\News;
   $uri =  strtok($block->getRequest()->getRequestUri(), '?');
   $page = $block->getRequest()->getParam('page') ?? 1;
 
-  $result = $block->articles(News::BUSINESS)->paginate($page)->get();
+  $result = $block->articles(News::SPORT)->paginate($page)->get();
   $data = $result->rss['_value']['channel'];
   $articles = $data['item'];
 
