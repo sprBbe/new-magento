@@ -2,6 +2,10 @@
     background-color: #ddf0ff;
 }
 
+a.bar-item {
+    color: #e33;
+}
+
 .card {
     overflow: hidden;
 }
